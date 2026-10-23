@@ -199,6 +199,9 @@ sessions=1 proj=on/4 active=idle events=22/2 frames=4 packs=10 preset=none ; lin
 - **`proj=off` 且 `frames=0`**：宿主没有 `sessionProjections` 服务（非 dsh-TUI 宿主），阶段数据源缺失；诊断码 `host.no-session-projections`；
 - **设置页没有「状态轮换」**：宿主缺少 `tuiSettingsSections` 接缝（诊断码 `host.missing-tuiSettingsSections`），仍可用行配置改参数；
 - **Claude / Codex 后端下没有文案**：本插件的阶段引擎消费 DSH 会话投影；非 DSH 内核的会话流不产生 `workingActivity` 投影，本插件保持隐藏（不猜测状态）。这是宿主后端差异，不是轮换失败。
+- **刚出现时只显示「正在」两个字、像卡住**：那是打字机的中间帧——默认 30ms/字，整句约 0.3–0.6 秒打完（截图/回放常抓到这一瞬间）；等半秒或按 `/status-rotator next` 看下一句即可。不想看逐字过程，把 `/settings → 状态轮换 → 打字机速度` 设为 `0`（整句直出）。
+- **画面上同时有宿主工作行和本插件行**：第一行是 dsh-TUI 自带的 working-activity（spinner + 阶段 + 时长/tokens），第二行才是本插件的轮换行；两行共存是设计（本插件只新增自己的行，不覆盖宿主）。只想看一行时，可在 `/settings` 的 dsh-tui 设置里关掉宿主的「活动行 / statusBar.activity」。
+- **窄终端**：文案按 terminal cell 截断，超宽时尾部显示 `…`；CJK 按 2 cell 计算，不会把半个字切坏。
 
 ### 调试日志
 

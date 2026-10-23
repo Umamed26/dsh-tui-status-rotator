@@ -176,6 +176,9 @@ sessions=1 proj=on/4 active=idle events=22/2 frames=4 packs=10 preset=none ; lin
 - **`line: none` with `bank.empty`**: every pack may be disabled, or the external bank overrode everything into an empty set;
 - **No "Status rotator" page in settings**: the host lacks the `tuiSettingsSections` seam (diagnostic `host.missing-settingsSections`); use the row config instead;
 - **No line under the Claude / Codex backends**: the phase engine consumes the DSH session projection; non-DSH kernel backends do not produce a `workingActivity` projection, so the plugin stays hidden instead of guessing. That is a host-backend difference, not a rotation failure.
+- **Only two characters at first, looks stuck**: that is a typewriter mid-frame - default 30 ms/grapheme means a full phrase takes ~0.3-0.6 s (screenshots/replays often catch this instant). Wait half a second, or press `/status-rotator next` for a fresh phrase. To show the whole phrase at once, set `/settings -> Status rotator -> typewriter speed` to `0`.
+- **Two lines appear**: the first one is dsh-TUI's own working-activity line (spinner + phase + elapsed/tokens); the second is this plugin's rotating line. Coexistence is intentional (this plugin adds its own row and never overwrites the host's). To keep only one, turn off the host's activity row in `/settings` (dsh-tui -> status bar -> activity / `statusBar.activity`).
+- **Narrow terminals**: the phrase is clipped by terminal cells and shows `…`; CJK costs 2 cells, so no grapheme is cut in half.
 
 ### Debug logging
 
