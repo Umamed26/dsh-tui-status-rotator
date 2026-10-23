@@ -1,0 +1,72 @@
+{
+  "name": "dsh-tui-status-rotator",
+  "version": "0.1.0",
+  "description": "Port of dsh-status-rotator to dsh-TUI: phase-aware rotating status phrases with typewriter, adaptive gradient, weighted shuffle-bag selection and a native settings section.",
+  "type": "module",
+  "main": "lib/types/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "import": "./lib/types/index.js"
+    },
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./dsh-plugin.json": "./dsh-plugin.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "dsh-plugin.json",
+    "cordis.patch.yml",
+    "README.md",
+    "README_ZH.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "docs"
+  ],
+  "engines": {
+    "node": "^22.19 || >=24"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test --test-concurrency=2 \"test/**/*.test.ts\"",
+    "check:manifest": "node scripts/check-manifest.mjs",
+    "check:bank": "node scripts/check-bank.mjs",
+    "verify": "npm run build && npm run check:manifest && npm run check:bank && node --test --test-concurrency=2 \"test/**/*.test.ts\"",
+    "pack:verify": "node scripts/pack-verify.mjs",
+    "prepublishOnly": "npm run verify && npm run pack:verify"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-tui",
+    "dsh-plugin",
+    "tui",
+    "status",
+    "rotator",
+    "status-rotator",
+    "typewriter",
+    "gradient",
+    "phrase-bank"
+  ],
+  "author": {
+    "name": "dsh-tui-status-rotator contributors"
+  },
+  "license": "MIT",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "^3.18.1"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "typescript": "^6.0.3"
+  }
+}

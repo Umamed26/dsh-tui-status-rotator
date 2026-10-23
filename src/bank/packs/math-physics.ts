@@ -1,0 +1,90 @@
+/**
+ * Built-in phrase pack `math-physics` — 数学与物理 / Math & physics.
+ * 57 entries (zh.thinking 10, zh.running 4, zh.long 21, en.thinking 4, en.running 5, en.long 13).
+ *
+ * Extracted verbatim from dsh-status-rotator config.example.json.
+ * Do not translate, reorder or edit the copy: test/bank/data.test.ts pins
+ * the whole corpus with a SHA-256 over its canonical JSON.
+ *
+ * @module dsh-tui-status-rotator/bank/packs/math-physics
+ */
+import type { PackDoc } from '../../types.js'
+export const PACK_MATH_PHYSICS: PackDoc = {
+  id: "math-physics",
+  label: { zh: "数学与物理", en: "Math & physics" },
+  phrases: {
+    zh: {
+      thinking: [
+        "正在生成黑洞…",
+        "正在哄骗人类启动流浪地球计划…",
+        "正在回复不要回答的信件…",
+        "正在利用古筝行动切割矩阵…",
+        "正在运输二向箔…",
+        "正在制作黑洞…",
+        "正在二氧化碳中制取氧气…",
+        "正在合成烷基八氮…",
+        "正在创作核弹论文…",
+        "正在破壁罗辑…",
+      ],
+      running: [
+        "正在给粒子加速器热身…",
+        "正在做双缝实验…",
+        "正在把 {tps} 换算成瓦特…",
+        "正在测量 {elapsed} 的熵增…",
+      ],
+      long: [
+        "正在证明NP≠P…",
+        "正在从火星移民…",
+        "正在召唤三体人…",
+        "正在将太阳系二维化…",
+        "正在放弃小宇宙质量…",
+        "正在计算BB(6)…",
+        "正在建立新数学大厦B…",
+        "正在计算R(6,6)…",
+        "正在验证黎曼猜想的第 4 亿个零点…",
+        "正在追 Collatz 的循环(第 7 圈)…",
+        "正在写 P=NP 的证明(第 8 版)…",
+        "正在严谨地证明 1+1=2…",
+        "正在等黑洞蒸发完…",
+        "正在宇宙热寂前极限冲刺…",
+        "正在给太阳系做年度保养…",
+        "正在等外星人回消息…",
+        "正在推算宇宙的生日…",
+        "正在数星星(数到一半忘了)…",
+        "正在为宇宙计算更精确的 π…",
+        "正在和 42 讨论生命的意义…",
+        "正在备份地球(进度 0.0001%)…",
+      ],
+    },
+    en: {
+      thinking: [
+        "Getting flash-unplugged by the government…",
+        "Generating a black hole…",
+        "Extracting oxygen from CO2…",
+        "Starting from zero (again)…",
+      ],
+      running: [
+        "Playing a 24/7 unpaid intern…",
+        "Warming up the particle accelerator…",
+        "Running the double-slit experiment…",
+        "Converting {tps} tok/s into watts…",
+        "Measuring the entropy of {elapsed}…",
+      ],
+      long: [
+        "Immigrating off Mars…",
+        "Summoning the Trisolarans…",
+        "Computing BB(6)…",
+        "Erecting New Math Tower B…",
+        "Computing R(6,6)…",
+        "Verifying the 400-millionth zero of the Riemann hypothesis…",
+        "Chasing a Collatz cycle (lap 7)…",
+        "Waiting for the black hole to evaporate…",
+        "Awaiting the aliens' reply…",
+        "Computing the universe's birthday…",
+        "Counting stars (lost count halfway)…",
+        "Discussing the meaning of life with 42…",
+        "Backing up Earth (0.0001% done)…",
+      ],
+    },
+  },
+};

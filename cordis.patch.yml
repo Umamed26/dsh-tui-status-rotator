@@ -1,0 +1,9 @@
+# dsh-tui-status-rotator bundle patch.
+# Inserts the plugin as a profile row. The row id is also the settings namespace
+# the plugin registers its /settings section under (seam 6), so do not rename it
+# without updating the section lookup.
+- insert:
+    - id: status-rotator
+      name: dsh-tui-status-rotator
+      config:
+        enabled: true

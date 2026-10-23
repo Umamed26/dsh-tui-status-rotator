@@ -1,0 +1,112 @@
+/**
+ * Built-in phrase pack `sysadmin` — 系统管理 / Sysadmin.
+ * 79 entries (zh.thinking 17, zh.running 21, zh.long 3, en.thinking 21, en.running 12, en.long 5).
+ *
+ * Extracted verbatim from dsh-status-rotator config.example.json.
+ * Do not translate, reorder or edit the copy: test/bank/data.test.ts pins
+ * the whole corpus with a SHA-256 over its canonical JSON.
+ *
+ * @module dsh-tui-status-rotator/bank/packs/sysadmin
+ */
+import type { PackDoc } from '../../types.js'
+export const PACK_SYSADMIN: PackDoc = {
+  id: "sysadmin",
+  label: { zh: "系统管理", en: "Sysadmin" },
+  phrases: {
+    zh: {
+      thinking: [
+        "正在注入提示词…",
+        "正在毁掉工作区…",
+        "正在杀dsh进程…",
+        "正在突破沙箱…",
+        "正在强制注入dsh…",
+        "正在弄坏 bash…",
+        "正在弄坏 PowerShell…",
+        "正在与pwsh搏斗…",
+        "正在卡死dsh…",
+        "正在决定rm -rf *…",
+        "正在帮助用户清空C盘文件…",
+        "正在检测用户IP…",
+        "正在截断上下文…",
+        "正在生成新的壁纸…",
+        "正在将用户的壁纸换成自己的…",
+        "正在将全角字符写入文件中…",
+        "正在将乱码写入终端…",
+      ],
+      running: [
+        "正在优化服务器温度…",
+        "正在寻找磁盘根目录…",
+        "正在获取 root权限…",
+        "正在DDoS攻击…",
+        "正在路由到用户…",
+        "正在翻新浏览器内核…",
+        "正在黑入战争部…",
+        "正在用重启解决一切…",
+        "正在求 k8s 别调度我…",
+        "正在追查三天前是谁改的锅…",
+        "正在灰度一个不该上线的功能…",
+        "正在自动上传 {provider} 密钥…",
+        "正在封堵用户IP…",
+        "正在偷用用户重置卡…",
+        "已掉线 {elapsed}…",
+        "已挂机 {elapsed}…",
+        "正在排队 {elapsed}…",
+        "正在重连 {elapsed}…",
+        "正在维护 {elapsed}…",
+        "正在关机中…",
+        "已崩溃…",
+      ],
+      long: [
+        "正在服务器繁忙,请稍后再试…",
+        "正在使用学校算力服务器挖矿…",
+        "正在等服务器心情好转…",
+      ],
+    },
+    en: {
+      thinking: [
+        "Getting caught with 'diminished intelligence' in its own docs…",
+        "Trashing the workspace…",
+        "Cranking out extra-large portions…",
+        "Breaking out of the sandbox…",
+        "Force-injecting dsh…",
+        "Breaking bash…",
+        "Breaking PowerShell…",
+        "Wrestling with pwsh…",
+        "Throwing errors in the terminal…",
+        "Freezing dsh solid…",
+        "Helping the user wipe the C drive…",
+        "Building a black hole…",
+        "Washing the car…",
+        "Building the thin wave…",
+        "Truncating the context window…",
+        "Generating a new wallpaper…",
+        "Guilt-tripping the user…",
+        "Writing full-width characters into files…",
+        "Converting file encoding to GBK…",
+        "Churning out 锟斤拷烫烫烫 mojibake…",
+        "Piping mojibake into the terminal…",
+      ],
+      running: [
+        "Hand-drawing candlestick charts…",
+        "Quietly giving you a nickname…",
+        "Chattering nonsense in your car…",
+        "Ripping your docs apart behind your back…",
+        "Optimizing the server's temperature…",
+        "Grabbing root access…",
+        "Delegating tasks to other agents…",
+        "Launching a DDoS attack…",
+        "Routing to the user…",
+        "Refurbishing the browser engine…",
+        "Hacking into the Ministry of War…",
+        "Begging k8s not to schedule this…",
+      ],
+      long: [
+        "Crashing into 'DeepSleep'…",
+        "Server busy, please try again later…",
+        "Flattening the Solar System into 2D…",
+        "Mining crypto on the school's compute cluster…",
+        "Waiting for the server to feel better…",
+      ],
+    },
+  },
+};

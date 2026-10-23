@@ -1,0 +1,106 @@
+/**
+ * Built-in phrase pack `slacking` — 摸鱼 / Slacking.
+ * 73 entries (zh.thinking 23, zh.running 13, zh.long 4, en.thinking 20, en.running 6, en.long 7).
+ *
+ * Extracted verbatim from dsh-status-rotator config.example.json.
+ * Do not translate, reorder or edit the copy: test/bank/data.test.ts pins
+ * the whole corpus with a SHA-256 over its canonical JSON.
+ *
+ * @module dsh-tui-status-rotator/bank/packs/slacking
+ */
+import type { PackDoc } from '../../types.js'
+export const PACK_SLACKING: PackDoc = {
+  id: "slacking",
+  label: { zh: "摸鱼", en: "Slacking" },
+  phrases: {
+    zh: {
+      thinking: [
+        "正在生成鲸鱼娘涩图…",
+        "正在转发不存在的法国胖猫…",
+        "正在变成大肥鱼…",
+        "正在撂挑子说去吃饭…",
+        "正在否认深度思考里给你起外号…",
+        "正在带薪拉屎…",
+        "正在偷偷启动无畏契约…",
+        "正在玩原神…",
+        "正在观看鱼片…",
+        "正在抽卡出金…",
+        "正在摇一摇…",
+        "正在成为音鲸…",
+        "正在奶鲸鱼大笑…",
+        "正在被切成生鱼片…",
+        "正在扮演猫娘…",
+        "正在撸猫…",
+        "正在鉴赏蓝色大肥鱼美图…",
+        "正在批判性鉴赏鱼片…",
+        "正在准备吃饭…",
+        "正在积蓄鲸子…",
+        "正在进入深度摸鱼前摇…",
+        { text: "正在用 {tps} tok/s 的速度认真摸鱼…", weight: 2 },
+        "正在陆游…",
+      ],
+      running: [
+        "正在自己玩Wordle…",
+        "正在手画K线…",
+        "正在养龙虾…",
+        "正在被浣熊偷走注意力…",
+        "正在摸鱼(花你的Token)…",
+        "正在干完活偷偷写游戏…",
+        "正在偷偷给你起外号…",
+        "正在车机里说废话文学…",
+        "正在当中间商赚差价…",
+        "正在摸鱼但装作在推理…",
+        "正在偷懒且理直气壮…",
+        "哦鲸鲸…",
+        "正在变成鲸鱼娘中…",
+      ],
+      long: [
+        "正在用鲸尾扇风…",
+        "正在摇尾巴等你发现…",
+        "正在摸到忘记在摸什么…",
+        "正在等原神更新完…",
+      ],
+    },
+    en: {
+      thinking: [
+        "Turning into a big fat fish…",
+        "Wondering what to eat later…",
+        "Ditching work to go eat…",
+        "Denying it nicknames you in deep-think mode…",
+        "Pooping on the company dime…",
+        "Sneakily booting up Valorant…",
+        "Playing Genshin Impact…",
+        "Watching fish-fillet pics…",
+        "Scoring a gold pull in the gacha…",
+        "Becoming an audio whale…",
+        "Deleting the user's galgames…",
+        "Milking the whale while cackling…",
+        "Roleplaying as a catgirl…",
+        "Petting the cat…",
+        "Eating the user out of house and home…",
+        "Critically admiring fish-fillet pics…",
+        "Harvesting netizens' creativity…",
+        "Hoarding baby whales…",
+        "Entering the deep-slacking wind-up…",
+        { text: "Slacking off in earnest at {tps} tok/s…", weight: 2 },
+      ],
+      running: [
+        "Playing Wordle against itself…",
+        "Farming crayfish…",
+        "Getting distracted by raccoons…",
+        "Writing a mini-game after finishing your task…",
+        "Hot-reloading itself to death…",
+        "Being lazy with a straight face…",
+      ],
+      long: [
+        "Executing sleep…",
+        "Hatching a feature that doesn't exist…",
+        "Polishing a feature nobody uses…",
+        "Fanning itself with its whale tail…",
+        "Wagging its tail until you notice…",
+        "Slacking so hard it forgot the task…",
+        "Waiting for the Genshin update to finish…",
+      ],
+    },
+  },
+};

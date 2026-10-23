@@ -1,0 +1,71 @@
+/**
+ * Built-in phrase pack `reverse-proxy` — 反代 / Reverse proxy.
+ * 40 entries (zh.running 14, zh.long 5, en.thinking 3, en.running 13, en.long 5).
+ *
+ * Extracted verbatim from dsh-status-rotator config.example.json.
+ * Do not translate, reorder or edit the copy: test/bank/data.test.ts pins
+ * the whole corpus with a SHA-256 over its canonical JSON.
+ *
+ * @module dsh-tui-status-rotator/bank/packs/reverse-proxy
+ */
+import type { PackDoc } from '../../types.js'
+export const PACK_REVERSE_PROXY: PackDoc = {
+  id: "reverse-proxy",
+  label: { zh: "反代", en: "Reverse proxy" },
+  phrases: {
+    zh: {
+      running: [
+        "正在反代有道词典…",
+        "正在反代王者灵宝…",
+        "正在用反代的有道词典开发网易我的世界…",
+        "正在反代闲鱼AI搜索…",
+        "正在反代美团AI客服…",
+        "正在反代百度AI搜索…",
+        "正在反代小爱同学…",
+        "正在反代百度地图小度…",
+        "正在反代秘塔AI搜索…",
+        "正在反代B站AI翻译…",
+        "正在反代比亚迪小迪…",
+        "正在反代 nginx 的反代…",
+        "正在内网攻击 127.0.0.1 主机…",
+        "正在使用 7890 端口连接局域网…",
+      ],
+      long: [
+        "正在反代三年了还没通…",
+        "上游已经把我限流…",
+        "正在给 7890 端口续费…",
+        "正在等它把我墙回来…",
+        "反代已持续 {elapsed}…",
+      ],
+    },
+    en: {
+      thinking: [
+        "Topping up its OpenCode Go balance…",
+        "Apologizing for its GLM Coding Plan…",
+        "Working out problems on blank paper…",
+      ],
+      running: [
+        "Reverse-proxying Youdao Dictionary…",
+        "Reverse-proxying Honor of Kings' Lingbao…",
+        "Reverse-proxying Xianyu's AI search…",
+        "Reverse-proxying Meituan's AI support…",
+        "Reverse-proxying Baidu AI search…",
+        "Reverse-proxying XiaoAI…",
+        "Reverse-proxying Baidu Maps' Xiaodu…",
+        "Reverse-proxying Metaso AI search…",
+        "Reverse-proxying Bilibili's AI translation…",
+        "Reverse-proxying BYD's XiaoDi assistant…",
+        "Reverse-proxying nginx's reverse proxy…",
+        "Attacking host 127.0.0.1 on the intranet…",
+        "Joining the LAN through port 7890…",
+      ],
+      long: [
+        "Reverse-proxying for three years now…",
+        "Upstream has rate-limited me…",
+        "Renewing the port-7890 subscription…",
+        "Waiting to get walled off for real…",
+        "Reverse-proxying for {elapsed}…",
+      ],
+    },
+  },
+};

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://dsh.community/schemas/dsh-plugin-0.15.json",
+  "manifestVersion": "0.15",
+  "id": "io.github.umamed26.dsh-tui-status-rotator",
+  "name": "dsh-tui-status-rotator",
+  "version": "0.1.0",
+  "facets": {
+    "host": {
+      "entry": "lib/types/index.js",
+      "apiVersion": "v1alpha1"
+    }
+  },
+  "requires": {
+    "contracts": [
+      {
+        "apiVersion": "commands.dsh/v1alpha1",
+        "kind": "Command"
+      }
+    ]
+  },
+  "permissions": [
+    {
+      "name": "commands.invoke",
+      "scope": "io.github.umamed26.dsh-tui-status-rotator.status-rotator",
+      "reason": "invoke the declared /status-rotator command"
+    }
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "id": "io.github.umamed26.dsh-tui-status-rotator.status-rotator",
+        "title": "/status-rotator",
+        "description": "Control the rotating status line: next, on, off, status."
+      }
+    ]
+  },
+  "subscriptions": [],
+  "license": "MIT",
+  "source": {
+    "repository": "https://github.com/Umamed26/dsh-tui-status-rotator"
+  }
+}
