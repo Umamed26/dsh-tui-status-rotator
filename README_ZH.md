@@ -1,10 +1,99 @@
 # dsh-tui-status-rotator
 
-> 把 [dsh-status-rotator](https://github.com/01Virex/dsh-status-rotator) 的状态行轮换移植进 [dsh-TUI](https://github.com/ccch1mneyyy/dsh-TUI)：**阶段感知文案、打字机、主题自适应渐变、加权洗牌袋反重复、14 个主题词库包、条件句与实时占位符、预设与时段调度**，并接入 dsh-TUI 原生的 `/settings` 设置区块与 `/status-rotator` 命令。
+> 把 [dsh-status-rotator](https://github.com/01Virex/dsh-status-rotator) 的**状态行轮换**移植进 [dsh-TUI](https://github.com/ccch1mneyyy/dsh-TUI)。
+>
+> 阶段感知文案 · 打字机 · 主题自适应渐变 · 加权洗牌袋反重复 · 14 个词库包（1362 条）· 条件句与实时占位符 · 预设与时段调度。
+>
+> 接入 dsh-TUI 原生的 `/settings` 设置区块 与 `/status-rotator` 命令，装完即用。
 
-[English](./README.md) · [效果](#效果) · [安装](#安装) · [设置](#设置) · [命令](#命令) · [高级配置](#高级配置) · [与原插件的差异](#与原-web-插件的差异) · [排障](#排障)
+[English](./README.md) · [安装](#安装) · [第一次运行](#第一次运行) · [效果](#效果) · [设置](#设置) · [命令](#命令) · [高级配置](#高级配置) · [与原插件的差异](#与原-web-插件的差异) · [排障](#排障) · [开发](#开发与验证) · [文档](#文档索引)
 
-这是 [DeepSeek Harness (DSH)](https://github.com/deepseek-ai/deepseek-harness) 的 **dsh-TUI 生态插件**：它为 dsh-TUI 的提示框上方提供一行轮换状态文案，工作方式与 web 版一致，只是渲染与配置落到了终端宿主自己的接缝上。
+---
+
+## 安装
+
+### 你需要什么
+
+| 依赖 | 版本 / 说明 |
+| --- | --- |
+| dsh-TUI | **v0.16+**（用到接缝 `tuiStatus.registerView` 与 `tuiSettingsSections`） |
+| DeepSeek Harness | 0.2.1-rc.2 已验证；更老版本可能缺接缝，插件会降级并报诊断 |
+| Node.js | `^22.19 || >=24` |
+| pnpm | `>=10`（`dsh plugin` 安装依赖时用） |
+| 终端 | 必须是**真实 TTY**（Windows Terminal WSL 标签页、VS Code 终端等）；不能把 stdout 重定向/接管道 |
+| 模型凭据 | `DEEPSEEK_API_KEY` 或 `/auth login deepseek-account`（dsh-tui 首次启动引导里检测） |
+
+插件随包提供 `dsh-plugin.json`（Community v0.15 声明面）与 `cordis.patch.yml`（profile 组合行），所以标准安装就一条命令。
+
+### 方式 A：npm（发布后最快）
+
+```sh
+dsh plugin --profile dsh-tui add dsh-tui-status-rotator
+```
+
+### 方式 B：从 GitHub 安装（当前可用）
+
+```sh
+git clone https://github.com/Umamed26/dsh-tui-status-rotator
+cd dsh-tui-status-rotator
+npm install && npm run build          # 编译到 lib/types/
+dsh plugin --profile dsh-tui add file:$PWD
+```
+
+### 方式 C：WSL 快速安装（本机验证过的路径）
+
+```sh
+# 1) 让 dsh 的插件安装使用 Linux 侧 pnpm，而不是 /mnt/c 的 Windows shim
+export PATH=/opt/node-v24.21.0-linux-x64/bin:$PATH
+
+# 2) 安装宿主（首次）；若本机 DSH 是 0.2.1-rc.2 而 dsh-tui 自带旧依赖，先做两次版本豁免
+dsh plugin --profile dsh-tui add @deepseek-harness-tui/dsh-tui
+dsh plugin --profile dsh-tui allow-version @deepseek-ai/dsh-code-runtime-worker-thread@0.1.5-rc.1 --dsh-version 0.2.1-rc.2 --accept-risk
+dsh plugin --profile dsh-tui allow-version @deepseek-ai/dsh-agent-presets@0.1.5-rc.1 --dsh-version 0.2.1-rc.2 --accept-risk
+dsh plugin --profile dsh-tui add @deepseek-harness-tui/dsh-tui
+
+# 3) 安装本插件
+git clone https://github.com/Umamed26/dsh-tui-status-rotator
+cd dsh-tui-status-rotator && npm install && npm run build
+dsh plugin --profile dsh-tui add file:$PWD
+```
+
+> 报 "incompatible with dsh" 时按提示补 `dsh plugin allow-version ... --accept-risk` 再重试；版本号以报错为准。
+
+### 安装后
+
+```sh
+dsh --profile dsh-tui
+# 想少打字可加别名： alias dsh-tui='dsh --profile dsh-tui'
+```
+
+第一次启动会有 4 步 onboarding（API key / 语言 / 模型 / 快捷键）。语言选「中文」后状态行文案也会跟着中文。
+
+### 卸载
+
+```sh
+dsh plugin --profile dsh-tui remove dsh-tui-status-rotator
+```
+
+`remove` 不会删你的数据：外部词库与缓存留在 `~/.dsh-tui/status-rotator/`，由你决定是否清理。详见[卸载与数据](#卸载与数据)。
+
+---
+
+## 第一次运行
+
+启动后发任意一句话，30 秒内完成下面 3 项检查：
+
+1. **状态行出现**：输入框上方多出一行，带阶段符号 `◌`（思考）/ `●`（运行）/ `◍`（长任务），逐字打出并流动变色；
+2. **命令可用**：输入 `/status-rotator status`，应看到类似一行（宿主会把结果压成一行）：
+   ```text
+   status-rotator on lang=zh phase=none ; view=on set=on settings=on cmd=on ;
+   sessions=1 proj=on/N active=idle events=N/N frames=N packs=10 preset=none ; line=- errors=none
+   ```
+3. **设置页出现**：打开 `/settings`，能看到「状态轮换」页（15 个字段）。
+
+> **刚出现时只显示「正在」两个字？** 那是打字机中间帧（默认 30ms/字，整句 0.3–0.6 秒打完），半秒后就是整句。不想看逐字过程，把 `/settings → 状态轮换 → 打字机速度` 设为 `0`。
+
+---
 
 ## 效果
 
@@ -23,30 +112,11 @@
 - 回合结束、会话空闲、或插件被关掉时整行消失，不占位、不闪烁、不抢焦点；
 - 与宿主自带的 working-activity 行共存：本插件只新增自己的一行，不覆盖宿主文案。
 
-## 安装
-
-要求 dsh-TUI **v0.16+**（接缝 `tuiStatus.registerView` / `tuiSettingsSections`）。插件随包提供 `dsh-plugin.json`（Community v0.15 声明面）与 `cordis.patch.yml`（profile 组合行）。
-
-```sh
-# 发布后（npm）
-dsh plugin --profile dsh-tui add dsh-tui-status-rotator
-
-# 本地开发：构建后把包目录装进 profile
-npm install && npm run build
-dsh plugin --profile dsh-tui add file:/绝对路径/dsh-tui-status-rotator
-```
-
-安装后重启 dsh-TUI，发起一个回合即可看到状态行。卸载：
-
-```sh
-dsh plugin --profile dsh-tui remove dsh-tui-status-rotator
-```
-
-`remove` 不会删除你的数据：外部词库文件与插件自己的缓存都留在 `~/.dsh-tui/status-rotator/`，由你决定是否清理（见[卸载与数据](#卸载与数据)）。
+---
 
 ## 设置
 
-打开 dsh-TUI 的 **`/settings`**，会多出 **「状态轮换 / Status rotator」** 一页（接缝 `tuiSettingsSections`）。所有字段即改即生效、由宿主的 revision 栅栏写回 profile，不需要重启；值改回默认后 profile 里的覆盖行会自动收回。真机回放已验证「勾选 → 落盘 → 热应用 → 回退默认」四步闭环（见 [真机回放记录](./docs/real-tty-replay.md)）。
+打开 dsh-TUI 的 **`/settings`**，会多出 **「状态轮换 / Status rotator」** 一页（接缝 `tuiSettingsSections`）。所有字段即改即生效、由宿主的 revision 栅栏写回 profile，不需要重启；值改回默认后 profile 里的覆盖行会自动收回。
 
 | 字段 | 默认 | 范围 | 说明 |
 | --- | --- | --- | --- |
@@ -66,17 +136,21 @@ dsh plugin --profile dsh-tui remove dsh-tui-status-rotator
 | `gradientDayColors` | 原插件白天色板 | ≥2 个颜色 | 自定义白天色板（`gradientMode=day` 时使用） |
 | `gradientSpeedSec` | `4` | 1–60 | 渐变流动一圈的秒数 |
 
-更复杂的结构（`presets` / `schedule` / `enabledPacks` / `bankPath`）不是声明式设置能编辑的，写进 profile 的插件行配置即可（见下一节），修改后重启宿主或热重载插件生效。
+更复杂的结构（`presets` / `schedule` / `enabledPacks` / `bankPath`）不是声明式设置能编辑的，写进 profile 的插件行配置即可（见[高级配置](#高级配置)），修改后重启宿主或热重载插件生效。
+
+---
 
 ## 命令
 
 ```text
 /status-rotator next      # 立刻换下一句
 /status-rotator on|off    # 本次运行内开关（长期设置请到 /settings）
-/status-rotator status    # 诊断：当前阶段/文案/词库包/宿主接缝/最近异常
+/status-rotator status    # 诊断：阶段/文案/词库包/宿主接缝/最近异常
 ```
 
 命令通过 dsh-commands 注册；宿主有托管命令面（`tuiPluginHost.registerCommand`）时优先走托管面，以便归属与授权检查。
+
+---
 
 ## 高级配置
 
@@ -156,6 +230,8 @@ export function apply(ctx) {
 
 重复 id、占用内置占位符名、非函数 provider 都会**在注册时抛错**（不静默）；注册内容不进配置、不落盘，卸载即消失。`api.status()` 返回宿主接缝、词库包与诊断快照。
 
+---
+
 ## 与原 web 插件的差异
 
 移植保留了行为语义，但宿主换了，几项能力在终端里没有对应物，明确列出而不是悄悄简化：
@@ -178,13 +254,15 @@ export function apply(ctx) {
 | `labelSource: host` | ✅ 移植 | 直接让位给宿主 |
 | 第三方 `ctx.statusRotator` 注册接口 | ✅ 移植 | 注册包 / 占位符 / provider |
 
+---
+
 ## 排障
 
-先跑 `/status-rotator status`（宿主把命令结果压成一行，字段紧凑排列）：
+先跑 `/status-rotator status`（单行诊断）：
 
 ```text
 status-rotator on lang=zh phase=none ; view=on set=on settings=on cmd=on ;
-sessions=1 proj=on/4 active=idle events=22/2 frames=4 packs=10 preset=none ; line=- errors=none
+sessions=1 proj=on/N active=idle events=N/N frames=N packs=10 preset=none ; line=- errors=none
 ```
 
 （上面为排版折行，实际是一行。）各字段含义：
@@ -198,9 +276,9 @@ sessions=1 proj=on/4 active=idle events=22/2 frames=4 packs=10 preset=none ; lin
 - **`line=-` 且有 `bank.empty`**：检查 `enabledPacks` 是否把所有包都关了、词库文件是否被外部覆盖成空；
 - **`proj=off` 且 `frames=0`**：宿主没有 `sessionProjections` 服务（非 dsh-TUI 宿主），阶段数据源缺失；诊断码 `host.no-session-projections`；
 - **设置页没有「状态轮换」**：宿主缺少 `tuiSettingsSections` 接缝（诊断码 `host.missing-tuiSettingsSections`），仍可用行配置改参数；
-- **Claude / Codex 后端下没有文案**：本插件的阶段引擎消费 DSH 会话投影；非 DSH 内核的会话流不产生 `workingActivity` 投影，本插件保持隐藏（不猜测状态）。这是宿主后端差异，不是轮换失败。
-- **刚出现时只显示「正在」两个字、像卡住**：那是打字机的中间帧——默认 30ms/字，整句约 0.3–0.6 秒打完（截图/回放常抓到这一瞬间）；等半秒或按 `/status-rotator next` 看下一句即可。不想看逐字过程，把 `/settings → 状态轮换 → 打字机速度` 设为 `0`（整句直出）。
-- **画面上同时有宿主工作行和本插件行**：第一行是 dsh-TUI 自带的 working-activity（spinner + 阶段 + 时长/tokens），第二行才是本插件的轮换行；两行共存是设计（本插件只新增自己的行，不覆盖宿主）。只想看一行时，可在 `/settings` 的 dsh-tui 设置里关掉宿主的「活动行 / statusBar.activity」。
+- **Claude / Codex 后端下没有文案**：本插件的阶段引擎消费 DSH 会话投影；非 DSH 内核的会话流不产生 `workingActivity` 投影，本插件保持隐藏（不猜测状态）。这是宿主后端差异，不是轮换失败；
+- **刚出现时只显示「正在」两个字、像卡住**：那是打字机中间帧（默认 30ms/字，整句约 0.3–0.6 秒打完）；等半秒或按 `/status-rotator next` 看下一句。不想看逐字过程，把 `/settings → 状态轮换 → 打字机速度` 设为 `0`；
+- **画面上同时有宿主工作行和本插件行**：第一行是 dsh-TUI 自带的 working-activity（spinner + 阶段 + 时长/tokens），第二行才是本插件的轮换行；两行共存是设计（本插件只新增自己的行，不覆盖宿主）。只想看一行时，可在 `/settings` 的 dsh-tui 设置里关掉宿主的「活动行 / statusBar.activity」；
 - **窄终端**：文案按 terminal cell 截断，超宽时尾部显示 `…`；CJK 按 2 cell 计算，不会把半个字切坏。
 
 ### 调试日志
@@ -216,35 +294,52 @@ export DSH_TUI_STATUS_ROTATOR_DEBUG_FILE=/tmp/sr-debug.log
 会记录：接缝注册结果、projection 变化、session 事件类型、每次发布的帧（可见性/阶段/文案）。
 真机回放样例见 [docs/real-tty-replay.md](./docs/real-tty-replay.md)。
 
+---
+
 ## 开发与验证
 
 ```sh
 npm install
 npm run build          # tsc -> lib/types
-npm test               # build + node --test test/
+npm test               # build + node --test
 npm run check:manifest # dsh-plugin.json 离线形状检查
 npm run check:bank     # 词库计数/查重/控制字符审计
-npm run verify         # build + manifest + bank + 全部测试
+npm run verify         # build + manifest + bank + 全部测试（209 项）
 npm run pack:verify    # npm pack 内容检查
 ```
 
 真实宿主回放（无头断言不够）：
 
 ```sh
-dsh plugin --profile dsh-tui add file:/绝对路径/dsh-tui-status-rotator
+dsh plugin --profile dsh-tui add file:$PWD
 dsh --profile dsh-tui          # 发起回合，观察提示框上方的轮换行
 /status-rotator status         # 核对接缝与词库
 ```
 
-本次移植已在 dsh-TUI 0.16.1 真机上完成一次完整回放（装载、注册、逐帧渲染、
-/settings 写回、隐藏收尾），记录见 [docs/real-tty-replay.md](./docs/real-tty-replay.md)；
-验证口径与无头边界见 [docs/verification.md](./docs/verification.md)。
+本次移植已在 dsh-TUI 0.16.1 真机上完成一次完整回放（装载、注册、逐帧渲染、/settings 写回、隐藏收尾），记录见 [docs/real-tty-replay.md](./docs/real-tty-replay.md)；验证口径与无头边界见 [docs/verification.md](./docs/verification.md)。
+
+---
 
 ## 卸载与数据
 
 - `disable`：只停用插件行，配置与数据保留；
 - `remove`：移除包与行，**不删** `~/.dsh-tui/status-rotator/`（外部词库等用户数据）；清理报告只陈述宿主真正撤销了什么；
 - 本插件的运行时资源（定时器、文件监听、状态视图、设置区块、命令、提供的服务）都挂在 cordis effect 上，卸载即释放，不残留。
+
+---
+
+## 文档索引
+
+| 文档 | 内容 |
+| --- | --- |
+| [docs/port-map.md](./docs/port-map.md) | 原插件行为清单、逐项映射与差异（PORTED / ADAPTED / N/A） |
+| [docs/verification.md](./docs/verification.md) | 验证入口、无头边界与真机人工清单 |
+| [docs/real-tty-replay.md](./docs/real-tty-replay.md) | 2026-10-23 真机回放证据（装载/渲染/设置写回） |
+| [docs/bank.md](./docs/bank.md) | 词库格式、归一/合并规则、外置文件生命周期 |
+| [docs/engine.md](./docs/engine.md) | 选择引擎、占位符、渐变、调度的精确语义 |
+| [docs/integration.md](./docs/integration.md) | dsh-TUI 接缝映射、诊断码、降级矩阵 |
+
+---
 
 ## 许可与致谢
 
