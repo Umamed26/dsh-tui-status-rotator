@@ -23,15 +23,9 @@
 | Terminal | must be a **real TTY** (Windows Terminal WSL tab, VS Code terminal, ...); stdout must not be piped/redirected |
 | Model auth | `DEEPSEEK_API_KEY` or `/auth login deepseek-account` (detected by the dsh-tui onboarding) |
 
-The package ships `dsh-plugin.json` (Community v0.15 declaration surface) and `cordis.patch.yml` (profile composition row), so installation is one command.
+The package ships `dsh-plugin.json` (Community v0.15 declaration surface) and `cordis.patch.yml` (profile composition row).
 
-### Option A: npm (once published)
-
-```sh
-dsh plugin --profile dsh-tui add dsh-tui-status-rotator
-```
-
-### Option B: from GitHub (works today)
+### Install from GitHub
 
 ```sh
 git clone https://github.com/Umamed26/dsh-tui-status-rotator
@@ -40,23 +34,7 @@ npm install && npm run build          # compile into lib/types/
 dsh plugin --profile dsh-tui add file:$PWD
 ```
 
-### Option C: WSL quick install (the path verified on this machine)
-
-```sh
-# 1) make dsh use the Linux pnpm, not the Windows shim under /mnt/c
-export PATH=/opt/node-v24.21.0-linux-x64/bin:$PATH
-
-# 2) install the host (first time)
-dsh plugin --profile dsh-tui add @deepseek-harness-tui/dsh-tui
-
-# 3) if DSH reports an incompatible dsh-tui dependency, grant the exact-version exemption it prints, then retry (e.g.)
-#    dsh plugin --profile dsh-tui allow-version @deepseek-ai/dsh-code-runtime-worker-thread@0.1.5-rc.1 --dsh-version 0.2.1-rc.2 --accept-risk
-
-# 4) install this plugin from GitHub
-git clone https://github.com/Umamed26/dsh-tui-status-rotator
-cd dsh-tui-status-rotator && npm install && npm run build
-dsh plugin --profile dsh-tui add file:$PWD
-```
+If the `dsh-tui` profile does not exist yet, install the host first: `dsh plugin --profile dsh-tui add @deepseek-harness-tui/dsh-tui`. If DSH reports an incompatible host dependency, run the printed `dsh plugin allow-version ... --accept-risk` and retry.
 
 ### After install
 

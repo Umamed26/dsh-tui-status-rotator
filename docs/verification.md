@@ -8,14 +8,12 @@
 
 > 原则：无头测试全绿 ≠ 准入通过，也 ≠ 真实 TTY 里好看好用。两边的证据不能互相冒充。
 >
-> 2026-10-23：Lead 已在 dsh-TUI 0.16.1 真机上完成一次完整回放（装载、deferred 接缝注册、
-> 逐帧渲染、/settings 写回、回合结束隐藏、卸载清理），原始命令与输出见
-> [real-tty-replay.md](./real-tty-replay.md)。本文 §1 的 `node --test "test/**/*.test.ts"`
-> 实际脚本带 `--test-concurrency=2`（并行负载下外部词库 watcher 用例会飘）。
+> 本文 §1 的 `node --test "test/**/*.test.ts"` 实际脚本带 `--test-concurrency=2`
+> （并行负载下外部词库 watcher 用例会不稳）。
 
 ---
 
-## 1. 一键复现（Node 24，本机实测）
+## 1. 一键复现
 
 ```sh
 cd dsh-tui-status-rotator
@@ -49,11 +47,11 @@ node --test "test/**/*.test.ts"                # 单元 + 集成测试
 | `node --test "test/**/*.test.ts"` | 引擎/词库/渲染/TUI 接缝单测 + **fake-host 集成测试**（见 §3） | 真实 React/Ink 渲染、真实宿主服务 |
 | `npm run pack:verify` | `npm pack --dry-run` 的发布面：`lib/types/index.js(+.d.ts)`、`dsh-plugin.json`、`cordis.patch.yml`、README/README_ZH/LICENSE 都在；`test/`、`node_modules/`、`src/`、`scripts/`、source map 不外泄 | 依赖闭包/native build（本包无原生依赖） |
 
-### 1.2 本机实测记录（2026-10-23；对应 src 最后修改 12:53:18 的工作树）
+### 1.2 发布前实测记录
 
 - `npm run build`：EXIT 0。
-- `npm run verify`：EXIT 0，`tests 209 / pass 209 / fail 0`（数字随队友新增单测增长；含本文件
-  作者负责的 5 条 fake-host 集成测试）；`check:manifest` 全 PASS；`check:bank` 0 error 0 warning。
+- `npm run verify`：EXIT 0，`tests 209 / pass 209 / fail 0`（数字随新增单测增长；含
+  fake-host 集成测试）；`check:manifest` 全 PASS；`check:bank` 0 error 0 warning。
 - `npm run pack:verify`：EXIT 0，86 个文件（解包后约 0.43 MiB，随 docs 更新略变）入包，无
 test/node_modules/src/scripts/source-map 泄漏；`docs/verification.md` 在包内。
 - `check-bank` 关键数字与 `src/bank/data.ts` 注释一致：
@@ -63,8 +61,8 @@ test/node_modules/src/scripts/source-map 泄漏；`docs/verification.md` 在包�
   源文件最新 mtime 早于全部产物。`src/` 无 console.log/TODO 代码残留，无对 dsh-TUI 应用包或
   `@dsh-std/*` 的运行时 import（保持 host-agnostic，只依赖结构类型）。
 - 已知偶发：`test/bank/external.test.ts` 的「2s watcher」用例依赖真实 `fs.watchFile` 轮询
-  （单跑约 4.7s），在并行测试负载下有低概率超过其 6s 断言窗口；重跑即恢复。它与本插件
-  TUI 行为无关，属测试时序脆弱，已报给 Lead。
+  （单跑约 4.7s），在并行测试负载下有低概率超过其断言窗口；重跑即恢复。它与本插件
+  TUI 行为无关，属测试时序脆弱。
 
 ### 1.3 脚本负例自检 + 词库移植保真
 
@@ -89,7 +87,7 @@ test/node_modules/src/scripts/source-map 泄漏；`docs/verification.md` 在包�
 ## 2. Manifest 的真实 parser 复核（parsed 档）
 
 `check-manifest.mjs` 是离线形状检查；准入还要求 manifest 能被**固定版本的
-`@dsh-std/manifest`** 解析并投影。本机做了两次交叉复核（不进入 npm 包，仅作为证据）：
+`@dsh-std/manifest`** 解析并投影。发布前做了两次交叉复核（不进入 npm 包，仅作为证据）：
 
 1. **宿主自带 parser（dsh-TUI 0.16.1 的 bundled `@dsh-std/manifest@0.1.0`）**：
    `parseManifest(source)` OK、`projectManifest(parsed)` OK；
@@ -153,14 +151,14 @@ revision-fenced 写入、权限 grant 判定、theme 颜色解析、TTY 宽度�
 
 ---
 
-## 4. 无头不可验证 + 真实 TUI 人工清单（observed 档）
+## 4. 无头不可验证 + 真实 TUI 人工清单
 
 以下必须在装了 dsh-TUI 的终端里完成（建议用隔离 profile，别动日常 profile）：
 
 ```sh
-# 1) 隔离 profile 里装宿主与插件（命令名以本机 dsh 为准）
+# 1) 安装宿主与插件（profile 名可自取，示例用 dsh-tui-verify）
 dsh plugin --profile dsh-tui-verify add @deepseek-harness-tui/dsh-tui
-dsh plugin --profile dsh-tui-verify add <本包路径或 tarball>
+dsh plugin --profile dsh-tui-verify add /path/to/dsh-tui-status-rotator
 
 # 2) 启动 TUI（需要真实 TTY；无头环境只会得到不可信结论）
 dsh --profile dsh-tui-verify
@@ -193,8 +191,8 @@ dsh --profile dsh-tui-verify
 
 ### 4.3 命令与设置（seam 6）
 
-- [ ] `/status-rotator status` 输出多行状态（启用、阶段、当前文案、词库包、宿主接缝
-      view/set/settings/cmd、异常列表），且不破坏会话记录。
+- [ ] `/status-rotator status` 输出单行诊断（启用、语言、阶段、view/set/settings/cmd、
+      投影/事件/帧计数、词库包数、当前文案、最近错误码），且不破坏会话记录。
 - [ ] `/status-rotator next|on|off` 生效；未知子命令报错可见；命令出现在补全/帮助里。
 - [ ] `/settings` 里出现 `Status rotator` 区块/页，15 个字段可编辑（enabled/language/
       intervalMs/typeSpeedMs/thinkingMs/longAfterMs/weightedRandom/antiRepeatRecentLimit/

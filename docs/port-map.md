@@ -146,7 +146,7 @@ Precedence for `enabledPacks` in the TUI port (highest first): external bank
 7. **No auto-update / no network.** The bank is local and inspectable; upstream
    copy can be synced with a normal file write (which is then hot-reloaded).
 
-## 5. Acceptance checklist (Lead can verify)
+## 5. Acceptance checklist
 
 Build and tests (all from the project root):
 

@@ -23,15 +23,9 @@
 | 终端 | 必须是**真实 TTY**（Windows Terminal WSL 标签页、VS Code 终端等）；不能把 stdout 重定向/接管道 |
 | 模型凭据 | `DEEPSEEK_API_KEY` 或 `/auth login deepseek-account`（dsh-tui 首次启动引导里检测） |
 
-插件随包提供 `dsh-plugin.json`（Community v0.15 声明面）与 `cordis.patch.yml`（profile 组合行），所以标准安装就一条命令。
+插件随包提供 `dsh-plugin.json`（Community v0.15 声明面）与 `cordis.patch.yml`（profile 组合行）。安装步骤：
 
-### 方式 A：npm（发布后最快）
-
-```sh
-dsh plugin --profile dsh-tui add dsh-tui-status-rotator
-```
-
-### 方式 B：从 GitHub 安装（当前可用）
+### 从 GitHub 安装
 
 ```sh
 git clone https://github.com/Umamed26/dsh-tui-status-rotator
@@ -40,25 +34,7 @@ npm install && npm run build          # 编译到 lib/types/
 dsh plugin --profile dsh-tui add file:$PWD
 ```
 
-### 方式 C：WSL 快速安装（本机验证过的路径）
-
-```sh
-# 1) 让 dsh 的插件安装使用 Linux 侧 pnpm，而不是 /mnt/c 的 Windows shim
-export PATH=/opt/node-v24.21.0-linux-x64/bin:$PATH
-
-# 2) 安装宿主（首次）；若本机 DSH 是 0.2.1-rc.2 而 dsh-tui 自带旧依赖，先做两次版本豁免
-dsh plugin --profile dsh-tui add @deepseek-harness-tui/dsh-tui
-dsh plugin --profile dsh-tui allow-version @deepseek-ai/dsh-code-runtime-worker-thread@0.1.5-rc.1 --dsh-version 0.2.1-rc.2 --accept-risk
-dsh plugin --profile dsh-tui allow-version @deepseek-ai/dsh-agent-presets@0.1.5-rc.1 --dsh-version 0.2.1-rc.2 --accept-risk
-dsh plugin --profile dsh-tui add @deepseek-harness-tui/dsh-tui
-
-# 3) 安装本插件
-git clone https://github.com/Umamed26/dsh-tui-status-rotator
-cd dsh-tui-status-rotator && npm install && npm run build
-dsh plugin --profile dsh-tui add file:$PWD
-```
-
-> 报 "incompatible with dsh" 时按提示补 `dsh plugin allow-version ... --accept-risk` 再重试；版本号以报错为准。
+如果还没有 `dsh-tui` 宿主 profile，先执行 `dsh plugin --profile dsh-tui add @deepseek-harness-tui/dsh-tui`；遇到版本兼容提示时，按报错给出的包和版本执行 `dsh plugin allow-version ... --accept-risk` 后重试。
 
 ### 安装后
 
@@ -97,7 +73,7 @@ dsh plugin --profile dsh-tui remove dsh-tui-status-rotator
 
 ## 效果
 
-回合进行中，提示框上方会出现一行随阶段轮换的文案（真机帧示例，`◌` / `●` / `◍` 为阶段指示符）：
+回合进行中，提示框上方会出现一行随阶段轮换的文案（示例帧，`◌` / `●` / `◍` 为阶段指示符）：
 
 ```text
 ◌ 正在自刎归天…
@@ -292,7 +268,6 @@ export DSH_TUI_STATUS_ROTATOR_DEBUG_FILE=/tmp/sr-debug.log
 ```
 
 会记录：接缝注册结果、projection 变化、session 事件类型、每次发布的帧（可见性/阶段/文案）。
-真机回放样例见 [docs/real-tty-replay.md](./docs/real-tty-replay.md)。
 
 ---
 
@@ -316,7 +291,7 @@ dsh --profile dsh-tui          # 发起回合，观察提示框上方的轮换�
 /status-rotator status         # 核对接缝与词库
 ```
 
-本次移植已在 dsh-TUI 0.16.1 真机上完成一次完整回放（装载、注册、逐帧渲染、/settings 写回、隐藏收尾），记录见 [docs/real-tty-replay.md](./docs/real-tty-replay.md)；验证口径与无头边界见 [docs/verification.md](./docs/verification.md)。
+验证口径与无头边界见 [docs/verification.md](./docs/verification.md)。
 
 ---
 
@@ -333,8 +308,7 @@ dsh --profile dsh-tui          # 发起回合，观察提示框上方的轮换�
 | 文档 | 内容 |
 | --- | --- |
 | [docs/port-map.md](./docs/port-map.md) | 原插件行为清单、逐项映射与差异（PORTED / ADAPTED / N/A） |
-| [docs/verification.md](./docs/verification.md) | 验证入口、无头边界与真机人工清单 |
-| [docs/real-tty-replay.md](./docs/real-tty-replay.md) | 2026-10-23 真机回放证据（装载/渲染/设置写回） |
+| [docs/verification.md](./docs/verification.md) | 验证入口、无头边界与真实 TUI 人工清单 |
 | [docs/bank.md](./docs/bank.md) | 词库格式、归一/合并规则、外置文件生命周期 |
 | [docs/engine.md](./docs/engine.md) | 选择引擎、占位符、渐变、调度的精确语义 |
 | [docs/integration.md](./docs/integration.md) | dsh-TUI 接缝映射、诊断码、降级矩阵 |
