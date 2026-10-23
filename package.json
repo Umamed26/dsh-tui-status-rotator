@@ -51,6 +51,14 @@
   "author": {
     "name": "dsh-tui-status-rotator contributors"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Umamed26/dsh-tui-status-rotator.git"
+  },
+  "homepage": "https://github.com/Umamed26/dsh-tui-status-rotator#readme",
+  "bugs": {
+    "url": "https://github.com/Umamed26/dsh-tui-status-rotator/issues"
+  },
   "license": "MIT",
   "dsh": {
     "bundle": {
