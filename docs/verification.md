@@ -7,6 +7,11 @@
 终端里人工完成，见文末清单。
 
 > 原则：无头测试全绿 ≠ 准入通过，也 ≠ 真实 TTY 里好看好用。两边的证据不能互相冒充。
+>
+> 2026-10-23：Lead 已在 dsh-TUI 0.16.1 真机上完成一次完整回放（装载、deferred 接缝注册、
+> 逐帧渲染、/settings 写回、回合结束隐藏、卸载清理），原始命令与输出见
+> [real-tty-replay.md](./real-tty-replay.md)。本文 §1 的 `node --test "test/**/*.test.ts"`
+> 实际脚本带 `--test-concurrency=2`（并行负载下外部词库 watcher 用例会飘）。
 
 ---
 
