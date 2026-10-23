@@ -247,27 +247,29 @@ write override something.
 > you want to keep) under that id. To *add* copy, use a brand-new pack id and
 > enable it via `enabledPacks` in the same file (or in the config).
 
-Minimal examples:
+Minimal examples (all example copy below is taken from the shipped corpus; a
+real override writes your own text in the same shapes):
 
 ```json
 // add a custom pack and enable only the core plus that pack
 {
-  "phrases": { "zh": { "thinking": ["正在接私货…"] } },
+  "phrases": { "zh": { "thinking": ["正在进入深度摸鱼前摇…"] } },
   "packs": [
     { "id": "my-pack", "label": { "zh": "我的词库", "en": "My pack" },
-      "phrases": { "zh": { "running": ["正在替我干活…"] } } }
+      "phrases": { "zh": { "running": ["正在干完活偷偷写游戏…"] } } }
   ],
   "enabledPacks": ["my-pack"]
 }
 ```
 
 ```json
-// replace the built-in "ads" pack with your own copy (complete pack required)
+// the complete-pack shape required for a same-id override; shown with the
+// shipped "ads" copy - substitute your own text in exactly this shape
 {
   "packs": [
     { "id": "ads", "label": { "zh": "广告", "en": "Ads" },
-      "phrases": { "zh": { "running": ["正在推荐我自己 github.com/me/my-plugin…"] },
-                   "en": { "running": ["Self-promoting github.com/me/my-plugin…"] } } }
+      "phrases": { "zh": { "running": ["正在优化提示词 github.com/WestFox-AwA/dsh-prompt-optimizer…"] },
+                   "en": { "running": ["Optimizing the prompt github.com/WestFox-AwA/dsh-prompt-optimizer…"] } } }
   ]
 }
 ```

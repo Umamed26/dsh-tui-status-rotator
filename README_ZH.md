@@ -15,6 +15,8 @@
 ● 正在灰度一个不该上线的功能…
 ```
 
+（示例取自随包词库的真实条目，可在 `src/bank/packs/` 找到原文与出处包。）
+
 - 逐字出现（打字机），整句出现后按设定间隔换成下一句；
 - 每个字按色板流动上色（默认使用宿主主题色板，深浅色主题自动适配）；
 - 阶段切换（思考 ◌ → 运行 ● → 长任务 ◍）立即换句，不必等轮换间隔；
@@ -92,8 +94,9 @@ dsh plugin --profile dsh-tui remove dsh-tui-status-rotator
         name: 夜间
         phrases:
           zh:
-            thinking: ["夜深了，还在盘…", "月亮不睡我不睡"]
-            running: ["夜里脑子慢，谅解", "正在深夜档营业…"]
+            thinking: ["正在进入深度摸鱼前摇…", "正在偷偷启动无畏契约…"]
+            running: ["正在摸鱼但装作在推理…", "正在干完活偷偷写游戏…"]
+            long: ["正在优雅地睡过整个 CI…"]
     schedule:
       - preset: night
         days: [1, 2, 3, 4, 5]     # ISO 星期 1=周一；省略 = 每天
@@ -106,6 +109,8 @@ dsh plugin --profile dsh-tui remove dsh-tui-status-rotator
 - **词库包**：`BUILTIN_PACKS` 共 14 个（`deepseek` / `coding` / `daily` / `internet-memes` / `sysadmin` / `slacking` / `math-physics` / `western-ai` / `reverse-proxy` / `china-ai` / `community` / `ads` / `star-ask` / `star-route`），默认启用前 10 个（945 条），全部 1362 条随包分发；
 - **条件句 / 权重 / 稀有句**：词库条目支持 `{ text, weight, when, rarity }`（或字符串），`when` 支持 `tool` / `retry` / `pending` / `phase` / `hour` / `firstTurn`，条件命中的句子优先抽取；
 - **占位符**：`{elapsed}` `{phase}` `{phaseLabel}` `{model}` `{provider}` `{tps}` `{pending}` `{tools}` `{running}` `{retry}` `{retryMax}` `{locale}` `{date}` `{time}`；随时间变化的占位符按控制器节拍实时刷新。
+
+> 本文档里的示例文案均取自随包词库（14 个包、1362 条，原样移植；可用 `npm run check:bank` 或 `/status-rotator status` 核对），不是另写的演示文本；自定义预设/第三方注册示例里出现的文案同样来自这份词库。
 
 ### 外部词库（热重载）
 
@@ -137,13 +142,14 @@ export function apply(ctx) {
   ctx.effect(() => api.registerPack({
     id: 'my-pack',
     label: { zh: '我的词库', en: 'My pack' },
-    phrases: { zh: { running: ['正在替我干活…'] } },
+    // 示例文案取自随包词库；实际注册时可以写任意文本
+    phrases: { zh: { running: ['正在干完活偷偷写游戏…'] } },
   }))
 
   ctx.effect(() => api.registerPlaceholder('myState', () => '3 项'))
 
   ctx.effect(() => api.registerPhraseProvider(site => (
-    site.phase === 'long' ? [{ text: '第三方条件句…', when: { phase: 'long' } }] : []
+    site.phase === 'long' ? [{ text: '正在优雅地睡过整个 CI…', when: { phase: 'long' } }] : []
   )))
 }
 ```

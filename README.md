@@ -15,6 +15,8 @@ While a turn runs, a line above the prompt rotates (real TTY frame examples; `�
 ● 正在灰度一个不该上线的功能…
 ```
 
+(Both are real entries from the shipped corpus; see `src/bank/packs/`.)
+
 - Typewriter reveal; after the phrase settles it rotates at the configured interval;
 - Each grapheme is colored from a flowing palette (host theme palette by default, adapts to light/dark themes);
 - Phase transitions (thinking ◌ -> running ● -> long ◍) swap the phrase immediately;
@@ -90,9 +92,10 @@ Add keys to the plugin row in the profile patch:
       - id: night
         name: Night
         phrases:
-          zh:
-            thinking: ["夜深了，还在盘…"]
-            running: ["正在深夜档营业…"]
+          en:
+            thinking: ["Sneakily booting up Valorant…", "Entering the deep-slacking wind-up…"]
+            running: ["Being lazy with a straight face…", "Writing a mini-game after finishing your task…"]
+            long: ["Slacking so hard it forgot the task…"]
     schedule:
       - preset: night
         days: [1, 2, 3, 4, 5]     # ISO weekday, 1 = Monday; omitted = every day
@@ -104,6 +107,8 @@ Add keys to the plugin row in the profile patch:
 - **Packs**: 14 built-in packs (1362 entries, default 10 enabled = 945), ported verbatim from the web plugin;
 - **Conditions / weights / rarity**: entries accept `{ text, weight, when, rarity }`; `when` supports `tool` / `retry` / `pending` / `phase` / `hour` / `firstTurn`, and matching conditionals win the draw;
 - **Placeholders**: `{elapsed}` `{phase}` `{phaseLabel}` `{model}` `{provider}` `{tps}` `{pending}` `{tools}` `{running}` `{retry}` `{retryMax}` `{locale}` `{date}` `{time}`.
+
+> Every example phrase in this document is taken from the shipped corpus (14 packs, 1362 entries, ported verbatim; verify with `npm run check:bank` or `/status-rotator status`) - including the preset and third-party registration examples. None of them is a made-up demo string.
 
 ### External bank (hot reload)
 
@@ -127,9 +132,10 @@ export const inject = ['statusRotator']
 export function apply(ctx) {
   const api = ctx.get('statusRotator', false)
   if (!api) return
-  ctx.effect(() => api.registerPack({ id: 'my-pack', label: { en: 'My pack' }, phrases: { en: { running: ['working for you…'] } } }))
+  // example copy taken from the shipped corpus; register any text you like
+  ctx.effect(() => api.registerPack({ id: 'my-pack', label: { en: 'My pack' }, phrases: { en: { running: ['Writing a mini-game after finishing your task…'] } } }))
   ctx.effect(() => api.registerPlaceholder('myState', () => '3 items'))
-  ctx.effect(() => api.registerPhraseProvider(site => site.phase === 'long' ? [{ text: 'third-party conditional…', when: { phase: 'long' } }] : []))
+  ctx.effect(() => api.registerPhraseProvider(site => site.phase === 'long' ? [{ text: 'Slacking so hard it forgot the task…', when: { phase: 'long' } }] : []))
 }
 ```
 
